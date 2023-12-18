@@ -18,7 +18,6 @@ class RegisterForm(FlaskForm):
     confirm_password = PasswordField('Confirm Password', validators=[ DataRequired(), EqualTo('password')])
     submit = SubmitField('Sign Up')
 
-# ADD THIS
 class ProductForm(FlaskForm):
     name = StringField('Product Name', validators=[ DataRequired() ] )
     image = StringField('Img url **Optional')

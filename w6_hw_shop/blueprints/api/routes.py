@@ -13,7 +13,7 @@ def token():
     data = request.json
     if data:
         client_id = data['client_id']
-        access_token = create_access_token(identity=client_id) #just needs a unique identifier 
+        access_token = create_access_token(identity=client_id) 
         return {
             'status': 200,
             'access_token': access_token
@@ -30,19 +30,18 @@ def get_shop():
 
     allprods = Product.query.all()
 
-    response = products_schema.dump(allprods) #loop through allprods list of objects and change objects into dictionarys
+    response = products_schema.dump(allprods) 
     return jsonify(response)
 
-@api.route('/order/create/<cust_id>', methods = ['POST']) #CREATE is usually paired with a POST method 
+@api.route('/order/create/<cust_id>', methods = ['POST'])  
 @jwt_required()
 def create_order(cust_id):
 
     data =  request.json
 
-    customer_order = data['order'] #going to be a list of order dictionaries with prod_id, quantity, price 
-
-    customer = Customer.query.filter(Customer.cust_id == cust_id).first() #searching the database for that customer
-    if not customer: #if we dont have a customer, this is their first order and lets add them in the database
+    customer_order = data['order'] 
+    customer = Customer.query.filter(Customer.cust_id == cust_id).first() 
+    if not customer: 
         customer = Customer(cust_id)
         db.session.add(customer)
 
@@ -51,7 +50,6 @@ def create_order(cust_id):
 
     for product in customer_order:
 
-        #def __init__(self, prod_id, quantity, price, order_id, cust_id):
 
         prodorder = ProdOrder(product['prod_id'], product['quantity'], product['price'], order.order_id, customer.cust_id )
         db.session.add(prodorder)
@@ -59,7 +57,6 @@ def create_order(cust_id):
         order.increment_ordertotal(prodorder.price)
 
         current_product = Product.query.get(product['prod_id'])
-        #need to decrement the total quantitty available based on how much the customer bought
         current_product.decrement_quantity(product['quantity'])
 
     db.session.commit()
@@ -84,15 +81,15 @@ def get_orders(cust_id):
 
         product_dict = product_schema.dump(product)
 
-        product_dict['quantity'] = order.quantity #this is the quantity we ordered 
-        product_dict['order_id'] = order.order_id #this is the order info
-        product_dict['id'] = order.prodorder_id #and then this makes it a unique order data object 
+        product_dict['quantity'] = order.quantity 
+        product_dict['order_id'] = order.order_id 
+        product_dict['id'] = order.prodorder_id 
 
         data.append(product_dict)
 
     return jsonify(data)
 
-@api.route('/order/update/<order_id>', methods = ['PUT']) #whenever we are updating we using PUT
+@api.route('/order/update/<order_id>', methods = ['PUT']) 
 @jwt_required()
 def update_order(order_id):
 
@@ -115,12 +112,12 @@ def update_order(order_id):
 
 
     if prodorder.quantity > new_quantity: 
-        product.increment_quantity(diff) #we are putting some products back
-        order.decrement_ordertotal(prodorder.price) #our order total is less $ now 
+        product.increment_quantity(diff) 
+        order.decrement_ordertotal(prodorder.price)
 
     elif prodorder.quantity < new_quantity:
-        product.decrement_quantity(diff) #we are taking more quantity aaway
-        order.increment_ordertotal(prodorder.price) #our order total is more $ now 
+        product.decrement_quantity(diff) 
+        order.increment_ordertotal(prodorder.price) 
 
     prodorder.update_quantity(new_quantity)
 
@@ -144,8 +141,8 @@ def delete_order(order_id):
     product = Product.query.get(prod_id)
 
 
-    order.decrement_ordertotal(prodorder.price) #less $ because deleted a product from our order
-    product.increment_quantity(prodorder.quantity) #getting back some total quantity available to sell 
+    order.decrement_ordertotal(prodorder.price) 
+    product.increment_quantity(prodorder.quantity) 
 
     db.session.delete(prodorder)
     db.session.commit()

@@ -1,38 +1,32 @@
-from itertools import product
+# from itertools import product
 from flask import Blueprint, redirect, render_template, request, flash
+from w6_hw_shop.models import Product, Customer, Order, db
+from w6_hw_shop.forms import ProductForm
 
 
-#internal import
-from rangers_shop.models import Product, Customer, Order, db
-from rangers_shop.forms import ProductForm
-
-
-
-#need to instantiate our Blueprint class
 site = Blueprint('site', __name__, template_folder='site_templates' )
 
 
-#use site object to create our routes
 @site.route('/')
 def shop():
-    #we need to query our database to grab all of our products to display
-    allprods = Product.query.all() #the same as SELECT * FROM products, list of objects 
+
+    allprods = Product.query.all()
     allcustomers = Customer.query.all()
     allorders = Order.query.all()
 
-    #making our dictionary for our shop stats/info
+ 
 
     shop_stats = {
-        'products' : len(allprods), #this is how many total products we have
-        'sales' : sum([order.order_total for order in allorders]),  #[ 27.99, 83.25, 50.99 ] sum them bad boys up
+        'products' : len(allprods), 
+        'sales' : sum([order.order_total for order in allorders]),  
         'customers' : len(allcustomers)
     }
 
 
 
-    our_class = "Rangers are the best "
+    our_class = " MASS Cars"
 
-    return render_template('shop.html', shop=allprods, coolmessage = our_class, stats=shop_stats ) #looking inside our template_folder (site_templates) to find our shop.html file
+    return render_template('shop.html', shop=allprods, coolmessage = our_class, stats=shop_stats ) 
 
 @site.route('/shop/create', methods= ['GET', 'POST'])
 def create():
@@ -40,7 +34,6 @@ def create():
     createform = ProductForm()
 
     if request.method == 'POST' and createform.validate_on_submit():
-        #grab our data from our form
         name = createform.name.data
         image = createform.image.data
         description = createform.description.data
@@ -48,7 +41,7 @@ def create():
         quantity = createform.quantity.data 
 
 
-        product = Product(name, price, quantity, image, description)
+        product = Product(name, image, description, price, quantity)
 
         db.session.add(product)
         db.session.commit()
@@ -76,7 +69,6 @@ def update(id):
         product.price = updateform.price.data 
         product.quantity = updateform.quantity.data 
 
-        #commit our changes
         db.session.commit()
 
         flash(f"You have successfully updated product {product.name}", category='success')

@@ -7,12 +7,12 @@
 <div class="container-fluid justify-content-center">
     <div class="row shop-header p-5">
         <div class="col-3 ms-5 d-flex flex-column justify-content-center">
-            <h2>Welcome to your Shop!</h2>
+            <h2>Welcome to MASS Cars!</h2>
             {% if current_user.is_authenticated %}
-            <h5>All your products will show up here</h5>
-            <a href="{{url_for('site.create')}}" class="btn btn-outline-dark mt-3">Create New Products</a>
+            <h5>All your vehicles will show up here</h5>
+            <a href="{{url_for('site.create')}}" class="btn btn-outline-dark mt-3">Add vehicle</a>
             {% else %}
-            <h5>Please Sign in to View Shop</h5>
+            
             <a href="/signin" class="btn btn-outline-dark mt-3">Sign In</a>
             {% endif %}
         </div>
@@ -34,15 +34,12 @@
                 <p class="card-text"> {{ product.description }}</p>
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item">Price: {{ product.price }}</li>
-                    <li class="list-group-item">Quantity: {{ product.quantity }}</li>
-                    {% if product.quantity <= 10 %} <span class='err-msg btn-danger p-2 opacity-50 rounded'> ALERT:
-                        Quantity is Low </span>
-                        {% endif %}
+                   
                 </ul>
                 <div class="mt-2">
 
-                    <a href="{{ url_for('site.update', id=product.prod_id) }}" class="card-link btn btn-warning">Update Product</a>
-                    <a href="{{ url_for('site.delete', id=product.prod_id )}}" class="card-link btn btn-danger">Delete Product</a>
+                    <a href="{{ url_for('site.update', id=product.prod_id) }}" class="card-link btn btn-warning">Update Garage</a>
+                    <a href="{{ url_for('site.delete', id=product.prod_id )}}" class="card-link btn btn-danger">Delete Car</a>
 
                 </div>
             </div>
@@ -51,7 +48,7 @@
     {% endfor %}
     {% else %}
     <div class="row mt-5 mb-5 d-flex align-items-center">
-        <h3 class="d-flex justify-content-center">Your Products Will Show Up Here Once Signed In</h3>
+        <h3 class="d-flex justify-content-center">Sign in to see your cars</h3>
     </div>
     {% endif %}
 </div>

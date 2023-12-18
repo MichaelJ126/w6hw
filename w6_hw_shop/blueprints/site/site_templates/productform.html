@@ -2,7 +2,7 @@
     {{ form.hidden_tag() }}
     <div class="col-12">
         {{ form.name.label }}
-        {{ form.name(class='form-control mt-2', placeholder='Carnivorous Plant') }}
+        {{ form.name(class='form-control mt-2', placeholder='Cars') }}
         {% for error in form.name.errors %}
             <span class="err-msg">{{ error }}</span>
         {% endfor %}
@@ -13,11 +13,11 @@
     </div>
     <div class="col-12">
         {{ form.description.label }}
-        {{ form.description(class='form-control mt-2', placeholder='a very hungry plant') }}
+        {{ form.description(class='form-control mt-2', placeholder=) }}
     </div>
     <div class="col-12">
         {{ form.price.label }}
-        {{ form.price(class='form-control mt-2', placeholder='$10.99') }}
+        {{ form.price(class='form-control mt-2', placeholder=) }}
         {% for error in form.price.errors %}
             <span class="err-msg">{{ error }}</span>
         {% endfor %}
